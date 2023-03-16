@@ -1,11 +1,14 @@
 // Wrap all code that interacts with the DOM in a call to jQuery to ensure that
 // the code isn't run until the browser has finished rendering all the elements
 // in the html.
-var saveButtons = $('.saveBtn')
-var textAreas = $('textarea')
-var timeRowEl = $('.time-block')
+var saveButtons = $('.saveBtn');
+var textAreas = $('textarea');
+var timeRowEl = $('.time-block');  
 
-var inputEl = 
+
+var scheduledItems
+
+var inputEl 
 
 
 
@@ -22,6 +25,19 @@ $(function () {
   // function? How can DOM traversal be used to get the "hour-x" id of the
   // time-block containing the button that was clicked? How might the id be
   // useful when saving the description in local storage?
+});
+
+
+
+  saveButtons.on('click', function(event) {
+  event.stopPropagation();
+  var text = $(this).siblings('textarea').val();
+  var timeCode = $(this).parent().attr('id');
+  console.log(text);
+  console.log(timeCode)
+  // need to store in local storage (JSON)
+  localStorage.setItem(timeCode, JSON.stringify(text));
+});
 
 
   //
@@ -30,25 +46,43 @@ $(function () {
   // attribute of each time-block be used to conditionally add or remove the
   // past, present, and future classes? How can Day.js be used to get the
   // current hour in 24-hour time?
+
+  function init() {
+    for (var i = 9; i <=17; i++) {
+      var timeCode = "hour-" + i;
+      var storedText = JSON.parse(localStorage.getItem(timeCode));
+      // console.log(timeCode)
+      
+      if (storedText !== null) {
+
+        for (var x = 0; x < $("#container").children().length; x++)
+
+        // console.log(timeCode)
+        // console.log($("#container").children().eq(x).attr("id"))
+        if (timeCode === $("#container").children().eq(x).attr("id")) {
+          // console.log(timeCode + x + storedText + $("#container").children().eq(x).children("textarea"))
+          var insertText = $("#container").children().eq(x).children("textarea")
+          console.log(insertText + storedText)
+          insertText.val(storedText)
+
+        }
+
+      } else {
+        // console.log(timeCode + ": No Data")
+      }
+
+      // console.log(timeCode)
+    }
+  }
+
   //
   // TODO: Add code to get any user input that was saved in localStorage and set
   // the values of the corresponding textarea elements. HINT: How can the id
   // attribute of each time-block be used to do this?
   //
   // TODO: Add code to display the current date in the header of the page.
-});
 
 
-// console.log(textAreas)
-// console.log(timeRowEl)
-
-
-// textAreas.forEach(function(item){
-//     saveButtons.on('click',function() {
-//       console.log(item)
-//     }
-// )}
-// )
 
 function item() {
 
@@ -64,15 +98,6 @@ function item() {
 // })
 
 
-saveButtons.on('click', function(event) {
-  event.stopPropagation();
-  var text = $(this).siblings('textarea').val();
-  var timeCode = $(this).parent().attr('id');
-  console.log(text);
-  console.log(timeCode)
-  // need to store in local storage (JSON)
-  localStorage.setItem(timeCode, text);
-})
 
-
+init ();
 
